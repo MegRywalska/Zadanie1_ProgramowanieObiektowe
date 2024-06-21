@@ -2,10 +2,10 @@
 
 public class Osoba
 {
-    private string imie;
-    private string nazwisko;
-    private DateTime? DataUrodzin { get; set; }
-    private DateTime? DataSmierci { get; set; }
+    private string _imie;
+    public string Nazwisko { get; set; }
+    public DateTime? DataUrodzin { get; set; } = null;
+    public DateTime? DataSmierci { get; set; } = null;
 
     public Osoba(string imieNazwisko)
     {
@@ -14,13 +14,13 @@ public class Osoba
 
     public string Imie
     {
-        get { return imie; }
+        get { return _imie; }
         set
         {
 
             if (!string.IsNullOrEmpty(value) && !string.IsNullOrWhiteSpace(value))
             {
-                imie = value.Trim();
+                _imie = value.Trim();
             }
             else
             {
@@ -32,23 +32,23 @@ public class Osoba
 
     public string ImieNazwisko
     {
-        get { return $"{imie} {nazwisko}"; }
+        get { return $"{_imie} {Nazwisko}"; }
         set
         {
             string[] personName = value.Split(' ');
             if (personName.Length == 2)
             {
-                imie = personName[0];
-                nazwisko = personName[1];
+                _imie = personName[0];
+                Nazwisko = personName[1];
             }
             else if (personName.Length == 1)
             {
-                imie = personName[0];
-                nazwisko = String.Empty;
+                _imie = personName[0];
+                Nazwisko = String.Empty;
             }
             else
             {
-                throw new ArgumentException("Podaj imię i nazwisko");
+                throw new ArgumentException("Podaj imię i nazwisko!");
             }
         }
     }
@@ -57,22 +57,15 @@ public class Osoba
     {
         get
         {
-            if (DataUrodzin.HasValue )
-            {            
-                if(DataSmierci.HasValue)
-                {
-                    return DataSmierci.Value - DataUrodzin.Value;
-                }
-                else
-                {
-                    return DateTime.Now - DataUrodzin.Value;
-                }
-                
-            }
-            else
+            if (!DataUrodzin.HasValue)
             {
                 return null;
             }
+
+            DateTime dataObecnaLubSmierci = DataSmierci ?? DateTime.Now;
+
+            return dataObecnaLubSmierci - DataUrodzin.Value;
+
         }
     }
 }
